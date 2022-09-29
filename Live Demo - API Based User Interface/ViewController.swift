@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     
     var firstButton: UIButton!
     var secondButton: UIButton!
+    var secondbuttonLeadingCon: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,16 +44,13 @@ class ViewController: UIViewController {
         )
         
         //Make the second button
-        self.secondButton = UIButton(type: UIButton.ButtonType.system)
+        self.secondButton = UIButton(type: UIButton.ButtonType.infoDark)
         self.secondButton.translatesAutoresizingMaskIntoConstraints = false
         self.secondButton.setTitle(
             "Second Button",
             for: UIControl.State.normal
         )
-        self.secondButton.frame = CGRect(
-            x:10, y: 200,
-            width: 100, height: 100
-        )
+        self.secondButton.backgroundColor = UIColor.lightGray
         self.secondButton.addTarget(
             self,
             action: #selector(secondButtonClicked(_:)),
@@ -68,18 +66,48 @@ class ViewController: UIViewController {
         // Make sure this a;; happens *after* we've added
         // these views to the main view, so they share
         // a common ancestor in our view Hierarchy
-        let b1CenterX = self.firstButton.centerXAnchor.constraint(
-            equalTo: self.view.safeAreaLayoutGuide.centerXAnchor
+        let b1TrailingCon = self.firstButton.trailingAnchor.constraint(
+            equalTo: self.view.safeAreaLayoutGuide.centerXAnchor,
+            constant: -20
         )
-        let b1CenterY = self.firstButton.centerYAnchor.constraint(
-            equalTo: self.view.safeAreaLayoutGuide.centerYAnchor
+        let b1TopCon = self.firstButton.topAnchor.constraint(
+            equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+            constant: 20
         )
-        b1CenterX.isActive = true
-        b1CenterY.isActive = true
+        b1TrailingCon.isActive = true
+        b1TopCon.isActive = true
+        
+        
+        self.secondbuttonLeadingCon = self.secondButton.leadingAnchor.constraint(
+            equalTo: self.view.safeAreaLayoutGuide.centerXAnchor,
+            constant: 20
+        )
+        let b2TopCon = self.secondButton.topAnchor.constraint(
+            equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+            constant: 20
+        )
+        secondbuttonLeadingCon.isActive = true
+        b2TopCon.isActive = true
         
         
         print("loadView() - Finished")
     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        var offset: Double = self.view.frame.width
+        offset = offset / 4.0
+        
+        // First deactive the exisitng constraint
+        self.secondbuttonLeadingCon.isActive = false
+        self.secondbuttonLeadingCon =
+            self.secondButton.leadingAnchor.constraint(
+            equalTo: self.view.safeAreaLayoutGuide.centerXAnchor,
+            constant: offset)
+        secondbuttonLeadingCon.isActive = true
+    }
+        
     
     @objc func firstButtonClicked(_ b: UIButton){
         print("First button clicked!")
